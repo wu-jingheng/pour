@@ -1,0 +1,7 @@
+com/moxie/multi_tenant/blog/repository/TenantRepository.class
+com/moxie/multi_tenant/blog/model/Post.class
+com/moxie/multi_tenant/blog/model/User.class
+com/moxie/multi_tenant/blog/repository/UserRepository.class
+com/moxie/multi_tenant/blog/repository/PostRepository.class
+com/moxie/multi_tenant/blog/Application.class
+com/moxie/multi_tenant/blog/model/Tenant.class
