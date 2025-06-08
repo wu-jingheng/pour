@@ -1,5 +1,6 @@
 package com.moxie.multi_tenant.blog.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -17,10 +18,12 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "tenant_id")
+    @JsonBackReference
     private Tenant tenant;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User author;
 
     public Long getId() {

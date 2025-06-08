@@ -1,5 +1,6 @@
 package com.moxie.multi_tenant.blog.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -16,6 +17,7 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "tenant_id")
+    @JsonBackReference
     private Tenant tenant;
 
     public Long getId() {

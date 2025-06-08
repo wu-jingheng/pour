@@ -3,6 +3,7 @@ package com.moxie.multi_tenant.blog.model;
 import java.util.Objects;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,9 +19,11 @@ public class Tenant {
     private String name;
 
     @OneToMany(mappedBy = "tenant")
+    @JsonManagedReference
     private Set<User> users;
 
     @OneToMany(mappedBy = "tenant")
+    @JsonManagedReference
     private Set<Post> posts;
 
     public Long getId() {
