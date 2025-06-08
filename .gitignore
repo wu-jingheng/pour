@@ -6,12 +6,7 @@ target/
 .idea/
 *.iml
 
-# Eclipse
-.classpath
-.project
-.settings/
-
-# VS Code
+# VSCode
 .vscode/
 
 # OS
@@ -21,5 +16,5 @@ Thumbs.db
 # Logs
 *.log
 
-# Docker
-**/.dockerignore
+# Environment files
+.env
