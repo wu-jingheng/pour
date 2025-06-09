@@ -1,5 +1,7 @@
 package com.moxie.multi_tenant.blog.controller;
 
+import com.moxie.multi_tenant.blog.dto.PostDto;
+import com.moxie.multi_tenant.blog.mapper.PostMapper;
 import com.moxie.multi_tenant.blog.model.Post;
 import com.moxie.multi_tenant.blog.repository.PostRepository;
 import org.springframework.web.bind.annotation.*;
@@ -12,22 +14,30 @@ public class PostController {
 
     private final PostRepository postRepository;
 
-    public PostController(PostRepository postRepository) {
+    private final PostMapper postMapper;
+
+    public PostController(PostRepository postRepository, PostMapper postMapper) {
         this.postRepository = postRepository;
+        this.postMapper = postMapper;
     }
 
     @GetMapping
-    public List<Post> getAll() {
-        return postRepository.findAll();
+    public List<PostDto> getAll() {
+        return postRepository.findAll().stream()
+                .map(postMapper::toDto)
+                .toList();
     }
 
     @PostMapping
-    public Post create(@RequestBody Post post) {
-        return postRepository.save(post);
+    public PostDto create(@RequestBody PostDto postDto) {
+        Post post = postMapper.toEntity(postDto);
+        post = postRepository.save(post);
+        return postMapper.toDto(post);
     }
 
     @GetMapping("/{id}")
-    public Post getById(@PathVariable Long id) {
-        return postRepository.findById(id).orElseThrow();
+    public PostDto getById(@PathVariable Long id) {
+        Post post = postRepository.findById(id).orElseThrow();
+        return postMapper.toDto(post);
     }
 }
