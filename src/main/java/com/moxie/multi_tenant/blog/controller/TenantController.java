@@ -1,5 +1,6 @@
 package com.moxie.multi_tenant.blog.controller;
 
+import com.moxie.multi_tenant.blog.common.ApiResponse;
 import com.moxie.multi_tenant.blog.dto.TenantDto;
 import com.moxie.multi_tenant.blog.service.TenantService;
 import jakarta.validation.Valid;
@@ -18,18 +19,21 @@ public class TenantController {
         this.tenantService = tenantService;
     }
 
-    @GetMapping
-    public List<TenantDto> getAll() {
-        return tenantService.getAllTenants();
+    @PostMapping
+    public ResponseEntity<ApiResponse<TenantDto>> create(@Valid @RequestBody TenantDto tenantDto) {
+        TenantDto tenant = tenantService.createTenant(tenantDto);
+        return ResponseEntity.ok(new ApiResponse<>(tenant));
     }
 
-    @PostMapping
-    public ResponseEntity<TenantDto> create(@Valid @RequestBody TenantDto tenantDto) {
-        return ResponseEntity.ok(tenantService.createTenant(tenantDto));
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<TenantDto>>> getAll() {
+        List<TenantDto> tenantsDto = tenantService.getAllTenants();
+        return ResponseEntity.ok(new ApiResponse<>(tenantsDto));
     }
 
     @GetMapping("/{id}")
-    public TenantDto getById(@PathVariable Long id) {
-        return tenantService.getTenantById(id);
+    public ResponseEntity<ApiResponse<TenantDto>> getById(@PathVariable Long id) {
+        TenantDto tenantDto = tenantService.getTenantById(id);
+        return ResponseEntity.ok(new ApiResponse<>(tenantDto));
     }
 }

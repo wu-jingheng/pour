@@ -1,5 +1,6 @@
 package com.moxie.multi_tenant.blog.controller;
 
+import com.moxie.multi_tenant.blog.common.ApiResponse;
 import com.moxie.multi_tenant.blog.dto.UserCreateDto;
 import com.moxie.multi_tenant.blog.dto.UserDto;
 import com.moxie.multi_tenant.blog.service.UserService;
@@ -19,18 +20,21 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public List<UserDto> getAll() {
-        return userService.getAllUsers();
+    @PostMapping
+    public ResponseEntity<ApiResponse<UserDto>> create(@Valid @RequestBody UserCreateDto userCreateDto) {
+        UserDto userDto = userService.createUser(userCreateDto);
+        return ResponseEntity.ok(new ApiResponse<>(userDto));
     }
 
-    @PostMapping
-    public ResponseEntity<UserDto> create(@Valid @RequestBody UserCreateDto userCreateDto) {
-        return ResponseEntity.ok(userService.createUser(userCreateDto));
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<UserDto>>> getAll() {
+        List<UserDto> usersDto = userService.getAllUsers();
+        return ResponseEntity.ok(new ApiResponse<>(usersDto));
     }
 
     @GetMapping("/{id}")
-    public UserDto getById(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public ResponseEntity<ApiResponse<UserDto>> getById(@PathVariable Long id) {
+        UserDto userDto = userService.getUserById(id);
+        return ResponseEntity.ok(new ApiResponse<>(userDto));
     }
 }
