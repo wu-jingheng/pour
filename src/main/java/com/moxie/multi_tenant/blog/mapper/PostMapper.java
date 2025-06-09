@@ -1,5 +1,6 @@
 package com.moxie.multi_tenant.blog.mapper;
 
+import com.moxie.multi_tenant.blog.dto.PostCreateDto;
 import com.moxie.multi_tenant.blog.dto.PostDto;
 import com.moxie.multi_tenant.blog.model.Post;
 import org.mapstruct.Mapper;
@@ -9,16 +10,17 @@ import org.mapstruct.Named;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {TenantMapper.class, UserMapper.class})
 public interface PostMapper {
+
     @Mapping(target = "tenantId", source = "tenant.id")
     @Mapping(target = "authorId", source = "author.id")
-    @Mapping(target = "createdAt", source = "createdAt", qualifiedByName = "formatDate")
+    // @Mapping(target = "createdAt", source = "createdAt", qualifiedByName = "formatDate")
     PostDto toDto(Post post);
 
-    @Mapping(target = "tenant.id", source = "tenantId")
-    @Mapping(target = "author.id", source = "authorId")
-    Post toEntity(PostDto postDto);
+    @Mapping(target = "tenantId", ignore = true) // Set manually in service
+    @Mapping(target = "authorId", ignore = true) // Set manually in service
+    Post toEntity(PostCreateDto postCreateDto);
 
     @Named("formatDate")
     default String formatDate(LocalDateTime dateTime) {

@@ -1,9 +1,9 @@
 package com.moxie.multi_tenant.blog.controller;
 
 import com.moxie.multi_tenant.blog.dto.TenantDto;
-import com.moxie.multi_tenant.blog.mapper.TenantMapper;
-import com.moxie.multi_tenant.blog.model.Tenant;
-import com.moxie.multi_tenant.blog.repository.TenantRepository;
+import com.moxie.multi_tenant.blog.service.TenantService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,32 +12,24 @@ import java.util.List;
 @RequestMapping("/api/tenants")
 public class TenantController {
 
-    private final TenantRepository tenantRepository;
+    private final TenantService tenantService;
 
-    private final TenantMapper tenantMapper;
-
-    public TenantController(TenantRepository tenantRepository, TenantMapper tenantMapper) {
-        this.tenantRepository = tenantRepository;
-        this.tenantMapper = tenantMapper;
+    public TenantController(TenantService tenantService) {
+        this.tenantService = tenantService;
     }
 
     @GetMapping
     public List<TenantDto> getAll() {
-        return tenantRepository.findAll().stream()
-                .map(tenantMapper::toDto)
-                .toList();
+        return tenantService.getAllTenants();
     }
 
     @PostMapping
-    public TenantDto create(@RequestBody TenantDto tenantDto) {
-        Tenant tenant = tenantMapper.toEntity(tenantDto);
-        tenant = tenantRepository.save(tenant);
-        return tenantMapper.toDto(tenant);
+    public ResponseEntity<TenantDto> create(@Valid @RequestBody TenantDto tenantDto) {
+        return ResponseEntity.ok(tenantService.createTenant(tenantDto));
     }
 
     @GetMapping("/{id}")
     public TenantDto getById(@PathVariable Long id) {
-        Tenant tenant = tenantRepository.findById(id).orElseThrow();
-        return tenantMapper.toDto(tenant);
+        return tenantService.getTenantById(id);
     }
 }

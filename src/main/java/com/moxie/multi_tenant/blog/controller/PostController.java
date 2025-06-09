@@ -1,9 +1,10 @@
 package com.moxie.multi_tenant.blog.controller;
 
+import com.moxie.multi_tenant.blog.dto.PostCreateDto;
 import com.moxie.multi_tenant.blog.dto.PostDto;
-import com.moxie.multi_tenant.blog.mapper.PostMapper;
-import com.moxie.multi_tenant.blog.model.Post;
-import com.moxie.multi_tenant.blog.repository.PostRepository;
+import com.moxie.multi_tenant.blog.service.PostService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,32 +13,24 @@ import java.util.List;
 @RequestMapping("/api/posts")
 public class PostController {
 
-    private final PostRepository postRepository;
+    private final PostService postService;
 
-    private final PostMapper postMapper;
-
-    public PostController(PostRepository postRepository, PostMapper postMapper) {
-        this.postRepository = postRepository;
-        this.postMapper = postMapper;
+    public PostController(PostService postService) {
+        this.postService = postService;
     }
 
     @GetMapping
     public List<PostDto> getAll() {
-        return postRepository.findAll().stream()
-                .map(postMapper::toDto)
-                .toList();
+        return postService.getAllPosts();
     }
 
     @PostMapping
-    public PostDto create(@RequestBody PostDto postDto) {
-        Post post = postMapper.toEntity(postDto);
-        post = postRepository.save(post);
-        return postMapper.toDto(post);
+    public ResponseEntity<PostDto> create(@Valid @RequestBody PostCreateDto postCreateDto) {
+        return ResponseEntity.ok(postService.createPost(postCreateDto));
     }
 
     @GetMapping("/{id}")
     public PostDto getById(@PathVariable Long id) {
-        Post post = postRepository.findById(id).orElseThrow();
-        return postMapper.toDto(post);
+        return postService.getPostById(id);
     }
 }

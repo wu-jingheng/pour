@@ -1,44 +1,36 @@
 package com.moxie.multi_tenant.blog.controller;
 
+import com.moxie.multi_tenant.blog.dto.UserCreateDto;
 import com.moxie.multi_tenant.blog.dto.UserDto;
-import com.moxie.multi_tenant.blog.mapper.UserMapper;
-import com.moxie.multi_tenant.blog.model.User;
-import com.moxie.multi_tenant.blog.repository.UserRepository;
+import com.moxie.multi_tenant.blog.service.UserService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    private final UserMapper userMapper;
-
-    public UserController(UserRepository userRepository, UserMapper userMapper) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
     public List<UserDto> getAll() {
-        return userRepository.findAll().stream()
-                .map(userMapper::toDto)
-                .toList();
+        return userService.getAllUsers();
     }
 
     @PostMapping
-    public UserDto create(@RequestBody UserDto userDto) {
-        User user = userMapper.toEntity(userDto);
-        user = userRepository.save(user);
-        return userMapper.toDto(user);
+    public ResponseEntity<UserDto> create(@Valid @RequestBody UserCreateDto userCreateDto) {
+        return ResponseEntity.ok(userService.createUser(userCreateDto));
     }
 
     @GetMapping("/{id}")
     public UserDto getById(@PathVariable Long id) {
-        User user = userRepository.findById(id).orElseThrow();
-        return userMapper.toDto(user);
+        return userService.getUserById(id);
     }
 }
