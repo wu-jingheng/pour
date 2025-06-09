@@ -18,8 +18,8 @@ public interface PostMapper {
     // @Mapping(target = "createdAt", source = "createdAt", qualifiedByName = "formatDate")
     PostDto toDto(Post post);
 
-    @Mapping(target = "tenantId", ignore = true) // Set manually in service
-    @Mapping(target = "authorId", ignore = true) // Set manually in service
+    @Mapping(target = "tenant", ignore = true) // Set manually in service
+    @Mapping(target = "author", ignore = true) // Set manually in service
     Post toEntity(PostCreateDto postCreateDto);
 
     @Named("formatDate")
