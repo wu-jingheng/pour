@@ -5,6 +5,8 @@ import com.moxie.pour.dto.PostCreateDto;
 import com.moxie.pour.dto.PostDto;
 import com.moxie.pour.service.PostService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,12 @@ public class PostController {
     public ResponseEntity<ApiResponse<PostDto>> create(@Valid @RequestBody PostCreateDto postCreateDto) {
         PostDto postDto = postService.createPost(postCreateDto);
         return ResponseEntity.ok(new ApiResponse<>(postDto));
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<ApiResponse<Page<PostDto>>> getAllPaged(Pageable pageable) {
+        Page<PostDto> page = postService.getAllPosts(pageable);
+        return ResponseEntity.ok(new ApiResponse<>(page));
     }
 
     @GetMapping

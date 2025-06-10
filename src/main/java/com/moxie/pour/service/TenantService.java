@@ -4,6 +4,8 @@ import com.moxie.pour.dto.TenantDto;
 import com.moxie.pour.mapper.TenantMapper;
 import com.moxie.pour.model.Tenant;
 import com.moxie.pour.repository.TenantRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +26,11 @@ public class TenantService {
         Tenant tenant = tenantMapper.toEntity(tenantDto);
         tenant = tenantRepository.save(tenant);
         return tenantMapper.toDto(tenant);
+    }
+
+    public Page<TenantDto> getAllTenants(Pageable pageable) {
+        return tenantRepository.findAll(pageable)
+                .map(tenantMapper::toDto);
     }
 
     public List<TenantDto> getAllTenants() {

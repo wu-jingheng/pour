@@ -8,6 +8,8 @@ import com.moxie.pour.model.User;
 import com.moxie.pour.repository.TenantRepository;
 import com.moxie.pour.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +36,11 @@ public class UserService {
         user.setTenant(tenant);
         user = userRepository.save(user);
         return userMapper.toDto(user);
+    }
+
+    public Page<UserDto> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable)
+                .map(userMapper::toDto);
     }
 
     public List<UserDto> getAllUsers() {

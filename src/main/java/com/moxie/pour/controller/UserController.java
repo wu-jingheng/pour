@@ -5,6 +5,8 @@ import com.moxie.pour.dto.UserCreateDto;
 import com.moxie.pour.dto.UserDto;
 import com.moxie.pour.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,12 @@ public class UserController {
     public ResponseEntity<ApiResponse<UserDto>> create(@Valid @RequestBody UserCreateDto userCreateDto) {
         UserDto userDto = userService.createUser(userCreateDto);
         return ResponseEntity.ok(new ApiResponse<>(userDto));
+    }
+
+    @GetMapping("/paged")
+    public ResponseEntity<ApiResponse<Page<UserDto>>> getAllPaged(Pageable pageable) {
+        Page<UserDto> page = userService.getAllUsers(pageable);
+        return ResponseEntity.ok(new ApiResponse<>(page));
     }
 
     @GetMapping
